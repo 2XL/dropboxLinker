@@ -46,3 +46,42 @@ if __name__ == "__main__":
     linker.revert_display()
     print "end_linking"
 ```
+
+
+
+### output:
+
+
+
+```javascript
+vagrant@sandBox:/vagrant/dropboxLinker$ python linker.py
+linker
+Constructor
+Remove file
+
+Remove config dir
+dropboxd
+run: nohup /home/vagrant/.dropbox-dist/dropboxd &> dropbox.out&
+Headless environment detected!
+(0, '')
+2016-04-22 19:07:49
+Please visit https://www.dropbox.com/cli_link_nonce?nonce=ca6325b6aa628f9b1c920a6535a0d43c to link this device.
+
+Join Dropbox
+(EE)
+Fatal server error:
+(EE) Server is already active for display 19
+	If this server is no longer running, remove /tmp/.X19-lock
+	and start again.
+(EE)
+(0, '')
+Set display
+:19
+Create Driver
+Dropbox - Dropbox
+Your computer was successfully linked to your account
+noop
+end_linking
+vagrant@sandBox:/vagrant/dropboxLinker$
+
+```

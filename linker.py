@@ -54,7 +54,10 @@ class Linker(object):
         print "run: {}".format(cmd_run)
         # 1. need to unse the display env var such the dropbox detects no display
         # self.bash_command('unset DISPLAY')
-        del os.environ["DISPLAY"]
+        try:
+            del os.environ["DISPLAY"]
+        except KeyError:
+            print "Headless environment detected!"
         print self.bash_command(cmd_run)
 
 
