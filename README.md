@@ -14,11 +14,6 @@
 
 
 1. Selenium (tutorial) For headless automation, Selenium can be used in conjunction with PhantomJS
-2. WebKit
-3. Spidermonkey
-
-
-
 
 ## Aux installation 4 Headless support
 
@@ -26,5 +21,26 @@ http://www.installationpage.com/selenium/how-to-run-selenium-headless-firefox-in
 
 
 
+### dependencies:
+
+1. firefox
+2. python-selenium
 
 
+
+
+## usage:
+
+
+import linker
+
+if __name__ == "__main__":
+    print "linker"
+    login = "benchbox@outlook.com"
+    passwd = "salou2010"
+    linker = Linker(login=login, passwd=passwd)
+    linker.start_dropboxd()
+    linker.setup_link()
+    linker.join_dropbox()
+    linker.revert_display()
+    print "end_linking"
