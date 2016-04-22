@@ -16,3 +16,15 @@
 1. Selenium (tutorial) For headless automation, Selenium can be used in conjunction with PhantomJS
 2. WebKit
 3. Spidermonkey
+
+
+
+
+## Aux installation 4 Headless support
+
+http://www.installationpage.com/selenium/how-to-run-selenium-headless-firefox-in-ubuntu/
+
+
+
+
+
