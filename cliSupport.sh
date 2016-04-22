@@ -35,7 +35,7 @@ sudo Xvfb :19 -ac
 export DISPLAY=:19
 firefox &
 # before you can run a browser need to set env var DISPLAY indicating the virtual disp index
-export DISPLAY=:10
+# export DISPLAY=:10
 
 
 

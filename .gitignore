@@ -1,1 +1,9 @@
 .idea
+node_modules
+cliSupport.sh
+credentials.json
+credentials.template.json
+index.js
+login.py
+test.py
+package.json

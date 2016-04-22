@@ -31,8 +31,8 @@ http://www.installationpage.com/selenium/how-to-run-selenium-headless-firefox-in
 
 ## usage:
 
-
-import linker
+```python
+from linker import Linker
 
 if __name__ == "__main__":
     print "linker"
@@ -44,3 +44,4 @@ if __name__ == "__main__":
     linker.join_dropbox()
     linker.revert_display()
     print "end_linking"
+```
