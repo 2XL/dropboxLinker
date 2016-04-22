@@ -7,7 +7,8 @@ import os
 from time import gmtime, strftime
 from selenium import webdriver
 import time
-
+import psutil # kill process dropbox by process name
+import shutil
 
 class Linker(object):
 
@@ -28,12 +29,22 @@ class Linker(object):
 
     def pre_requisite(self):
         # 1. no dropbox instance is running
-        self.bash_command("dropbox stop")
-        time.sleep(10)   # dejar 5 segundos para que se detenga dropbox
+        # self.bash_command("pkill dropbox")
+        for proc in psutil.process_iter():
+            if proc.name == "dropbox":
+                proc.kill()
+        time.sleep(3)   # dejar 5 segundos para que se detenga dropbox
         # 2. dropbox.out is empty
-        self.bash_command("rm {}".format(self.url_stream))
+        try:
+            print "Remove file "
+            os.remove(self.url_stream)
+        except Exception as ex:
+            print ex.message
+            # try delete the log file if exists
         # 3. there is no account assigned
-        self.bash_command("rm ~/.dropbox -r")
+        # self.bash_command("rm ~/.dropbox -r")
+        print "Remove config dir"
+        shutil.rmtree("{}/.dropbox".format(os.path.expanduser("~")))
 
     def start_dropboxd(self):
         print "dropboxd"
@@ -42,8 +53,10 @@ class Linker(object):
         cmd_run = "nohup /home/{}/{} &> {}& ".format(getpass.getuser(), dropboxd, self.url_stream)
         print "run: {}".format(cmd_run)
         # 1. need to unse the display env var such the dropbox detects no display
-        self.bash_command('unset DISPLAY ')
+        # self.bash_command('unset DISPLAY')
+        del os.environ["DISPLAY"]
         print self.bash_command(cmd_run)
+
 
     def setup_link(self):
         while True:
@@ -64,15 +77,18 @@ class Linker(object):
     def join_dropbox(self):
         print "Join Dropbox"
         # 1. create virtual display
-        try:
-            # print self.bash_command('sudo Xvfb {} -ac & '.format(self.display_idx_virtual))
-            # bash_command()
-            print "ASDF"
-        except Exception:
-            print Exception.message
+        if self.display_idx is None:
+            try:
+                print self.bash_command('sudo Xvfb {} -ac & '.format(self.display_idx_virtual))
+                # bash_command()
+            except Exception:
+                print Exception.message
         # 2. set display
-        print "Set display"
-        os.environ["DISPLAY"] = self.display_idx_virtual
+        if self.display_idx is None:  # only if it doesnt have
+            print "Set display"
+            os.environ["DISPLAY"] = self.display_idx_virtual
+        else:
+            os.environ["DISPLAY"] = self.display_idx # it was unset by the previous stage
         print os.environ['DISPLAY']
         # Create a new instance of the Firefox driver
         #########################################################
@@ -81,7 +97,14 @@ class Linker(object):
         # passwd = self.passwd
         print "Create Driver"
         driver = webdriver.Firefox()
-        driver.get(self.url)
+        while True:
+            try:
+                driver.get(self.url)
+            except Exception as ex:
+                print ex.message
+                continue
+            break
+
         print driver.title
         str = """
         console.log("Hello Script");
@@ -126,7 +149,9 @@ class Linker(object):
         # print str
         driver.execute_script(str)
         time.sleep(5)
-        result = driver.execute_script("document.getElementsByClassName('page-header-text')[0].innerHTML")
+        element = driver.find_element_by_class_name("page-header-text")
+        result = element.get_attribute("innerHTML")
+        # result = driver.execute_script("document.getElementsByClassName('page-header-text')[0].innerHTML")
         print result
         time.sleep(1)
         driver.close()
@@ -154,6 +179,7 @@ if __name__ == "__main__":
     login = "benchbox@outlook.com"
     passwd = "salou2010"
     linker = Linker(login=login, passwd=passwd)
+    linker.pre_requisite()
     linker.start_dropboxd()
     linker.setup_link()
     linker.join_dropbox()

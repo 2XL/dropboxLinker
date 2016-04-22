@@ -39,6 +39,7 @@ if __name__ == "__main__":
     login = "benchbox@outlook.com"
     passwd = "salou2010"
     linker = Linker(login=login, passwd=passwd)
+    linker.pre_requisite()
     linker.start_dropboxd()
     linker.setup_link()
     linker.join_dropbox()
