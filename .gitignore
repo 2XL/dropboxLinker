@@ -1,6 +1,5 @@
 .idea
 node_modules
-cliSupport.sh
 credentials.json
 credentials.template.json
 index.js
