@@ -9,6 +9,8 @@ from selenium import webdriver
 import time
 import psutil # kill process dropbox by process name
 import shutil
+import sys,getopt
+
 
 class Linker(object):
 
@@ -148,7 +150,7 @@ class Linker(object):
             }
         }
         console.log("Bye script")
-        """ % (login, passwd)
+        """ % (self.login, self.passwd)
         # print str
         driver.execute_script(str)
         time.sleep(5)
@@ -177,10 +179,29 @@ class Linker(object):
             print "revert display to: {}".format(self.display_idx)
             os.environ["DISPLAY"] = self.display_idx
 
-if __name__ == "__main__":
-    print "linker"
+
+def main(argv):
+    # take the parameters
+    try:
+        opts, args = getopt.getopt(argv, "u:p:",["login=","password="])
+    except getopt.GetoptError:
+        print 'linker.py -u <login> -p <password>'
+        sys.exit(2)
+
     login = "benchbox@outlook.com"
     passwd = "salou2010"
+
+    for opt, arg in opts:
+        if opt == '-h':
+            print 'linker.py -u <login> -p <password>'
+            sys.exit()
+        elif opt in ("-u", "--login"):
+            login = arg
+        elif opt in ("-p", "--password"):
+            passwd = arg
+    print 'Login:    ', login
+    print 'Password: ', passwd
+    print "linker"
     linker = Linker(login=login, passwd=passwd)
     linker.pre_requisite()
     linker.start_dropboxd()
@@ -189,3 +210,7 @@ if __name__ == "__main__":
     linker.revert_display()
     print "end_linking"
 
+if __name__ == "__main__":
+
+    main(sys.argv[1:])
+    #  dropbox stop && DBUS_SESSION_BUS_ADDRESS="" dropbox start
